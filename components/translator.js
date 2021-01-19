@@ -44,7 +44,7 @@ class Translator {
 
   translate() {
     let translatedText = this.text;
-    let myDict;
+    let myDict = [];
     translatedText = this.text;
     if (this.locale === 'american-to-british') {
       myDict = americanToBritish;
@@ -53,7 +53,7 @@ class Translator {
     }
     myDict.forEach((obj) => {
       const key = Object.keys(obj).join('')
-      const re = new RegExp(`(\\s+|^)${key}(\\s+|$)`, 'ig');
+      const re = new RegExp(`(\W*)${key}(\W*)`, 'ig');
       translatedText = translatedText.replace(re, `$1${obj[key]}$2`);
     });
     this.translation = translatedText;
