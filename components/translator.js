@@ -3,9 +3,16 @@ const americanToBritishSpelling = require('./american-to-british-spelling.js');
 const americanToBritishTitles = require('./american-to-british-titles.js');
 const britishOnly = require('./british-only.js');
 
-let americanToBritish = [];
-let britishToAmerican = [];
+// Reverse the key and value for an object and return the resulting object
+const reverseDictionary = (dictObj) => {
+  const reverseDict = {};
+  Object.keys(dictObj).forEach((key) => {
+    reverseDict[dictObj[key]] = key;
+  });
+  return reverseDict;
+};
 
+// Create an array of dictionary objects with keys containing multiple words first
 const createDictionary = (dictObj) => {
   const multiWord = [];
   const singleWord = [];
@@ -21,13 +28,16 @@ const createDictionary = (dictObj) => {
   return [].concat(multiWord, singleWord);
 };
 
+const americanToBritishWords = createDictionary(americanOnly);
+const britishToAmericanWords = createDictionary(britishOnly);
+const britishToAmericanSpelling = reverseDictionary(americanToBritishSpelling);
+const britishToAmericanTitles = reverseDictionary(americanToBritishTitles);
+
 class Translator {
   constructor(text = null, locale = null) {
     this.text = text;
     this.locale = locale;
     this.translation = null;
-    americanToBritish = createDictionary(americanOnly)
-    britishToAmerican = createDictionary(britishOnly)
   }
 
   setText(text) {
@@ -45,17 +55,45 @@ class Translator {
   translate() {
     let translatedText = this.text;
     let myDict = [];
+    let mySpelling = {};
+    let myTitles = {};
+    let myTimeRegEx;
+    let newTimeDelimeter;
+
     translatedText = this.text;
+
     if (this.locale === 'american-to-british') {
-      myDict = americanToBritish;
+      myDict = americanToBritishWords;
+      mySpelling = americanToBritishSpelling;
+      myTitles = americanToBritishTitles;
+      myTimeRegEx = /(\d+):(\d+)/;
+      newTimeDelimeter = '.';
     } else if (this.locale === 'british-to-american') {
-      myDict = britishToAmerican;
+      myDict = britishToAmericanWords;
+      mySpelling = britishToAmericanSpelling;
+      myTitles = britishToAmericanTitles;
+      myTimeRegEx = /(\d+)\.(\d+)/;
+      newTimeDelimeter = ':';
     }
+
+    // Translate words
     myDict.forEach((obj) => {
-      const key = Object.keys(obj).join('')
-      const re = new RegExp(`(\W*)${key}(\W*)`, 'ig');
+      const key = Object.keys(obj).join('');
+      const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
       translatedText = translatedText.replace(re, `$1${obj[key]}$2`);
     });
+
+    // Change spelling and titles
+    [mySpelling, myTitles].forEach((obj) => {
+      Object.keys(obj).forEach((key) => {
+        const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
+        translatedText = translatedText.replace(re, `$1${obj[key]}$2`);
+      });
+    });
+
+    // Change clock format
+    translatedText = translatedText.replace(myTimeRegEx, `$1${newTimeDelimeter}$2`);
+
     this.translation = translatedText;
   }
 
