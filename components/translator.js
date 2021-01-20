@@ -33,6 +33,14 @@ const britishToAmericanWords = createDictionary(britishOnly);
 const britishToAmericanSpelling = reverseDictionary(americanToBritishSpelling);
 const britishToAmericanTitles = reverseDictionary(americanToBritishTitles);
 
+// Escape the period character in the titles
+Object.keys(americanToBritishTitles).forEach((key) => {
+  const newKey = key.replace(/\./, '\\.');
+  const value = americanToBritishTitles[key];
+  delete americanToBritishTitles[key];
+  americanToBritishTitles[newKey] = value;
+});
+
 class Translator {
   constructor(text = null, locale = null) {
     this.text = text;
@@ -54,13 +62,13 @@ class Translator {
 
   translate() {
     let translatedText = this.text;
+
+    // Set defaults that will not change the text
     let myDict = [];
     let mySpelling = {};
     let myTitles = {};
-    let myTimeRegEx;
-    let newTimeDelimeter;
-
-    translatedText = this.text;
+    let myTimeRegEx = new RegExp('');
+    let newTimeDelimeter = '';
 
     if (this.locale === 'american-to-british') {
       myDict = americanToBritishWords;
@@ -92,7 +100,10 @@ class Translator {
     });
 
     // Change clock format
-    translatedText = translatedText.replace(myTimeRegEx, `$1${newTimeDelimeter}$2`);
+    translatedText = translatedText.replace(
+      myTimeRegEx,
+      `$1${newTimeDelimeter}$2`
+    );
 
     this.translation = translatedText;
   }
