@@ -84,28 +84,38 @@ class Translator {
       newTimeDelimeter = ':';
     }
 
+    // <span class="highlight">...</span>
     // Translate words
     myDict.forEach((obj) => {
       const key = Object.keys(obj).join('');
       const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
-      translatedText = translatedText.replace(re, `$1${obj[key]}$2`);
+      translatedText = translatedText.replace(
+        re,
+        `$1<span class="highlight">${obj[key]}</span>$2`
+      );
     });
 
     // Change spelling and titles
     [mySpelling, myTitles].forEach((obj) => {
       Object.keys(obj).forEach((key) => {
         const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
-        translatedText = translatedText.replace(re, `$1${obj[key]}$2`);
+        translatedText = translatedText.replace(
+          re,
+          `$1<span class="highlight">${obj[key]}</span>$2`
+        );
       });
     });
 
     // Change clock format
     translatedText = translatedText.replace(
       myTimeRegEx,
-      `$1${newTimeDelimeter}$2`
+      `$1<span class="highlight">${newTimeDelimeter}</span>$2`
     );
 
-    this.translation = translatedText;
+    this.translation =
+      this.text === translatedText
+        ? 'Everything looks good to me!'
+        : translatedText;
   }
 
   toString() {
