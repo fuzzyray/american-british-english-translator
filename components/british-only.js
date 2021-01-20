@@ -143,7 +143,7 @@ module.exports = {
   "motorway": "freeway",
   "muppet": "an incompetent or foolish person",
   "nark": "narc",
-  "nappy": "daiper",
+  "nappy": "diaper",
   "nosy parker": "nosy",
   "nosey parker": "nosy",
   "number plate": "license plate",
