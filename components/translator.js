@@ -70,6 +70,13 @@ class Translator {
   }
 
   translate() {
+    // Preserve the case of the initial character of a word when translating
+    const preserveInitialCase = (oldStr, newStr) => {
+      return oldStr[0] === oldStr[0].toUpperCase()
+        ? newStr.replace(newStr[0], newStr[0].toUpperCase())
+        : newStr;
+    };
+
     let translatedText = this.text;
 
     // Set defaults that will not change the text
@@ -103,21 +110,29 @@ class Translator {
     // Translate words
     myDict.forEach((obj) => {
       const key = Object.keys(obj).join('');
-      const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
-      translatedText = translatedText.replace(
-        re,
-        `$1${highlightSpanTag}${obj[key]}${highlightCloseSpanTag}$2`
-      );
+      const re = new RegExp(`(\\W+|^)(${key})(\\W+|$)`, 'ig');
+      const match = re.exec(translatedText);
+      if (match) {
+        const replacement = preserveInitialCase(match[2], obj[key]);
+        translatedText = translatedText.replace(
+          re,
+          `$1${highlightSpanTag}${replacement}${highlightCloseSpanTag}$3`
+        );
+      }
     });
 
     // Change spelling and titles
     [mySpelling, myTitles].forEach((obj) => {
       Object.keys(obj).forEach((key) => {
-        const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
-        translatedText = translatedText.replace(
-          re,
-          `$1${highlightSpanTag}${obj[key]}${highlightCloseSpanTag}$2`
-        );
+        const re = new RegExp(`(\\W+|^)(${key})(\\W+|$)`, 'ig');
+        const match = re.exec(translatedText);
+        if (match) {
+          const replacement = preserveInitialCase(match[2], obj[key]);
+          translatedText = translatedText.replace(
+            re,
+            `$1${highlightSpanTag}${replacement}${highlightCloseSpanTag}$3`
+          );
+        }
       });
     });
 
