@@ -19,7 +19,6 @@ module.exports = function(app) {
           translator.setText(req.body.text);
           translator.setLocale(req.body.locale);
           translator.translate();
-          console.log(translator.toString());
           res.json({
             'text': translator.text,
             'translation': translator.translation,
