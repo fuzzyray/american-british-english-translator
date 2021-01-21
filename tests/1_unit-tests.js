@@ -8,13 +8,12 @@ suite('Unit Tests', () => {
   const translator = new Translator();
 
   testCases.forEach((unitTest) => {
-    test(unitTest.text, () => {
+    test(`${unitTest.text} -> ${unitTest.translation}`, () => {
       translator.setText(unitTest.text);
       translator.setLocale(unitTest.locale);
+      translator.setHighlight(unitTest.highlight);
       translator.translate();
-      console.log(translator.toString());
       assert.equal(translator.translation, unitTest.translation);
     });
   });
-
 });
