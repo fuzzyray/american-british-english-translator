@@ -42,9 +42,10 @@ Object.keys(americanToBritishTitles).forEach((key) => {
 });
 
 class Translator {
-  constructor(text = null, locale = null) {
+  constructor(text = null, locale = null, highlight = true) {
     this.text = text;
     this.locale = locale;
+    this.highlight = highlight;
     this.translation = null;
   }
 
@@ -60,6 +61,14 @@ class Translator {
     }
   }
 
+  setHighlight(highlight) {
+    if (!!highlight) {
+      this.highlight = true;
+    } else {
+      this.highlight = false;
+    }
+  }
+
   translate() {
     let translatedText = this.text;
 
@@ -69,6 +78,13 @@ class Translator {
     let myTitles = {};
     let myTimeRegEx = new RegExp('');
     let newTimeDelimeter = '';
+    let highlightSpanTag = '<span class="highlight">';
+    let highlightCloseSpanTag = '</span>';
+
+    if (!this.highlight) {
+      highlightSpanTag = '';
+      highlightCloseSpanTag = '';
+    }
 
     if (this.locale === 'american-to-british') {
       myDict = americanToBritishWords;
@@ -84,14 +100,13 @@ class Translator {
       newTimeDelimeter = ':';
     }
 
-    // <span class="highlight">...</span>
     // Translate words
     myDict.forEach((obj) => {
       const key = Object.keys(obj).join('');
       const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
       translatedText = translatedText.replace(
         re,
-        `$1<span class="highlight">${obj[key]}</span>$2`
+        `$1${highlightSpanTag}${obj[key]}${highlightCloseSpanTag}$2`
       );
     });
 
@@ -101,7 +116,7 @@ class Translator {
         const re = new RegExp(`(\\W+|^)${key}(\\W+|$)`, 'ig');
         translatedText = translatedText.replace(
           re,
-          `$1<span class="highlight">${obj[key]}</span>$2`
+          `$1${highlightSpanTag}${obj[key]}${highlightCloseSpanTag}$2`
         );
       });
     });
@@ -109,7 +124,7 @@ class Translator {
     // Change clock format
     translatedText = translatedText.replace(
       myTimeRegEx,
-      `$1<span class="highlight">${newTimeDelimeter}</span>$2`
+      `$1${highlightSpanTag}${newTimeDelimeter}${highlightCloseSpanTag}$2`
     );
 
     this.translation =
