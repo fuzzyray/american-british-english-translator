@@ -4,6 +4,26 @@ const assert = chai.assert;
 const Translator = require('../components/translator.js');
 
 suite('Unit Tests', () => {
+  const translator = new Translator();
+
+  const testCases = [
+    {
+      text: 'Mangoes are my favorite fruit.',
+      locale: 'american-to-british',
+      translation:
+        'Mangoes are my <span class="highlight">favourite</span> fruit.',
+    },
+  ];
+
+  testCases.forEach((unitTest) => {
+    test(unitTest.text, () => {
+      translator.setText(unitTest.text);
+      translator.setLocale(unitTest.locale);
+      translator.translate();
+      console.log(translator.toString());
+      assert.equal(translator.translation, unitTest.translation);
+    });
+  });
 
   // Translate Mangoes are my favorite fruit. to British English
   // Translate I ate yogurt for breakfast. to British English
@@ -29,5 +49,4 @@ suite('Unit Tests', () => {
   // Highlight translation in I ate yogurt for breakfast.
   // Highlight translation in We watched the footie match for a while.
   // Highlight translation in Paracetamol takes up to an hour to work.
-
 });
