@@ -135,7 +135,7 @@ class Translator {
     // Change clock format
     translatedText = translatedText.replace(
       myTimeRegEx,
-      `$1${highlightSpanTag}${newTimeDelimeter}${highlightCloseSpanTag}$2`
+      `${highlightSpanTag}$1${newTimeDelimeter}$2${highlightCloseSpanTag}`
     );
 
     this.translation =
