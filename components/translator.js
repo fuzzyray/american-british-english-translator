@@ -62,11 +62,7 @@ class Translator {
   }
 
   setHighlight(highlight) {
-    if (!!highlight) {
-      this.highlight = true;
-    } else {
-      this.highlight = false;
-    }
+    this.highlight = !!highlight;
   }
 
   translate() {

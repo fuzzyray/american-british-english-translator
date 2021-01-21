@@ -5,8 +5,6 @@ const server = require('../server.js');
 
 chai.use(chaiHttp);
 
-let Translator = require('../components/translator.js');
-
 suite('Functional Tests', () => {
 
   test('Translation with text and locale fields: POST request to /api/translate', (done) => {
@@ -21,7 +19,7 @@ suite('Functional Tests', () => {
       .request(server)
       .post('/api/translate')
       .send({ text: text, locale: locale })
-      .end(function (err, res) {
+      .end((err, res) => {
         assert.equal(res.status, 200);
         assert.equal(res.type, 'application/json');
         assert.deepEqual(res.body, output);
@@ -37,7 +35,7 @@ suite('Functional Tests', () => {
       .request(server)
       .post('/api/translate')
       .send({ text: text, locale: locale })
-      .end(function (err, res) {
+      .end((err, res) => {
         assert.equal(res.status, 200);
         assert.equal(res.type, 'application/json');
         assert.deepEqual(res.body, output);
@@ -52,7 +50,7 @@ suite('Functional Tests', () => {
       .request(server)
       .post('/api/translate')
       .send({ locale: locale })
-      .end(function (err, res) {
+      .end((err, res) => {
         assert.equal(res.status, 200);
         assert.equal(res.type, 'application/json');
         assert.deepEqual(res.body, output);
@@ -67,7 +65,7 @@ suite('Functional Tests', () => {
       .request(server)
       .post('/api/translate')
       .send({ text: text })
-      .end(function (err, res) {
+      .end((err, res) => {
         assert.equal(res.status, 200);
         assert.equal(res.type, 'application/json');
         assert.deepEqual(res.body, output);
@@ -83,7 +81,7 @@ suite('Functional Tests', () => {
       .request(server)
       .post('/api/translate')
       .send({ text: text, locale: locale })
-      .end(function (err, res) {
+      .end((err, res) => {
         assert.equal(res.status, 200);
         assert.equal(res.type, 'application/json');
         assert.deepEqual(res.body, output);
@@ -102,7 +100,7 @@ suite('Functional Tests', () => {
       .request(server)
       .post('/api/translate')
       .send({ text: text, locale: locale })
-      .end(function (err, res) {
+      .end((err, res) => {
         assert.equal(res.status, 200);
         assert.equal(res.type, 'application/json');
         assert.deepEqual(res.body, output);
